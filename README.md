@@ -1,30 +1,21 @@
-# Task Manager API
+Task Manager API
 
 REST API для управления пользователями, проектами и задачами.
 **Стек:** Python 3.12, FastAPI, SQLAlchemy 2.x (sync), PostgreSQL 16, Alembic, pytest.
 
-## Запуск
+ Запуск
 
-### Вариант 1 — Docker Compose (PostgreSQL + API)
 ```bash
-docker compose up --build
-```
-Миграции применяются автоматически при старте. API: http://localhost:8000, документация: http://localhost:8000/docs.
-Compose также создаёт тестовую БД `taskdb_test`.
-
-### Вариант 2 — локально
-```bash
-docker compose up -d db                 # только PostgreSQL (или свой сервер)
+docker compose up -d db                
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env                    # при необходимости поправьте URL
+cp .env.example .env                    
 alembic upgrade head                    # миграции
 uvicorn app.main:app --reload
 ```
 
-## Тесты
+Тесты
 Нужна отдельная БД, имя которой заканчивается на `_test` (`TEST_DATABASE_URL`).
-При запуске через compose она уже создана; иначе: `createdb taskdb_test`.
 ```bash
 pytest
 ```
@@ -32,7 +23,7 @@ pytest
 перед каждым тестом таблицы очищаются `TRUNCATE`. Если `TEST_DATABASE_URL` совпадает с рабочим
 или не оканчивается на `_test`, pytest откажется стартовать — рабочие данные защищены.
 
-## Модель данных
+Модель данных
 | Таблица | Связи и ограничения |
 |---|---|
 | `users` | `email` UNIQUE |
