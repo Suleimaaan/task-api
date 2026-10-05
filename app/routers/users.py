@@ -15,7 +15,6 @@ def create_user(data: UserCreate, db: Session = Depends(get_db)):
     # email приводим к нижнему регистру, чтобы a@x.com и A@x.com считались одним адресом
     user = User(name=data.name, email=data.email.lower())
     db.add(user)
-    # Уникальность гарантирует БД (UNIQUE), поэтому гонок нет
     commit_or_http_error(db, 409, "Пользователь с таким email уже существует")
     db.refresh(user)
     return user
