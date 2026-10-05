@@ -2,7 +2,7 @@ def test_create_user_and_duplicate_email(client):
     r = client.post("/users", json={"name": "  Anna  ", "email": "anna@example.com"})
     assert r.status_code == 201
     body = r.json()
-    assert body["name"] == "Anna"  # пробелы по краям обрезаны
+    assert body["name"] == "Anna"  
     assert body["id"] and body["created_at"]
 
     # тот же email -> 409, в том числе в другом регистре
