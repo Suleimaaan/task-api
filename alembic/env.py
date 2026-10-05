@@ -6,7 +6,6 @@ from app.config import settings
 from app.database import Base
 
 config = context.config
-# URL можно переопределить программно (так делают тесты), иначе берём из настроек
 db_url = config.get_main_option("sqlalchemy.url") or settings.database_url
 target_metadata = Base.metadata
 
