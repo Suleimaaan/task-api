@@ -73,7 +73,6 @@ def test_filters_and_pagination_work_together(client, make_project, make_user, m
 
 def test_stable_order_when_created_at_equal(client, engine, make_project):
     pid = make_project()["id"]
-    # Один INSERT -> у всех строк одинаковый created_at (now() = время начала транзакции)
     with engine.begin() as conn:
         conn.execute(
             text("INSERT INTO tasks (title, project_id) VALUES ('a', :p), ('b', :p), ('c', :p)"),
@@ -92,7 +91,6 @@ def test_partial_update_and_unassign(client, make_project, make_user, make_task)
         deadline="2030-01-01T10:00:00+00:00",
     )
 
-    # меняем только статус; остальное не трогаем
     r = client.patch(f"/tasks/{task['id']}", json={"status": "in_progress"})
     assert r.status_code == 200
     body = r.json()
@@ -101,12 +99,11 @@ def test_partial_update_and_unassign(client, make_project, make_user, make_task)
     assert body["assignee_id"] == user["id"]
     assert body["updated_at"] >= task["updated_at"]
 
-    # снимаем исполнителя и очищаем необязательные поля
     r = client.patch(f"/tasks/{task['id']}", json={"assignee_id": None, "deadline": None, "description": None})
     assert r.status_code == 200
     body = r.json()
     assert body["assignee_id"] is None and body["deadline"] is None and body["description"] is None
-    assert body["status"] == "in_progress"  # не затронут
+    assert body["status"] == "in_progress"  
 
     # ошибки
     tid = task["id"]
