@@ -12,7 +12,6 @@ from pydantic import (
 
 from app.models import TaskStatus
 
-# Строка без пробелов по краям, не пустая после strip().
 NonBlank200 = Annotated[
     str, StringConstraints(strip_whitespace=True, min_length=1, max_length=200)
 ]
@@ -26,9 +25,6 @@ class ORMModel(BaseModel):
 
 
 class PatchModel(BaseModel):
-    """База для PATCH-схем. Поля, перечисленные в non_nullable, можно не передавать,
-    но нельзя явно передать null (например, у задачи не может не быть title)."""
-
     non_nullable: ClassVar[tuple[str, ...]] = ()
 
     @model_validator(mode="after")
@@ -39,7 +35,7 @@ class PatchModel(BaseModel):
         return self
 
 
-# ---------- Users ----------
+# Users
 class UserCreate(BaseModel):
     name: NonBlank100
     email: EmailStr
@@ -52,7 +48,7 @@ class UserRead(ORMModel):
     created_at: datetime
 
 
-# ---------- Projects ----------
+# Projects
 class ProjectCreate(BaseModel):
     name: NonBlank200
     description: str | None = None
@@ -71,7 +67,7 @@ class ProjectRead(ORMModel):
     created_at: datetime
 
 
-# ---------- Tasks ----------
+# Tasks 
 class TaskCreate(BaseModel):
     model_config = ConfigDict(use_enum_values=True)  # status -> "todo" (str)
 
