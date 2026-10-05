@@ -34,7 +34,6 @@ def list_tasks(
     offset: int = Query(0, ge=0),
     db: Session = Depends(get_db),
 ):
-    # Фильтры собираются в список и применяются одновременно (AND)
     filters = []
     if project_id is not None:
         filters.append(Task.project_id == project_id)
@@ -42,8 +41,7 @@ def list_tasks(
         filters.append(Task.status == status.value)
     if assignee_id is not None:
         filters.append(Task.assignee_id == assignee_id)
-
-    # total — по тем же фильтрам, но без limit/offset
+        
     total = db.scalar(select(func.count()).select_from(Task).where(*filters))
 
     stmt = (
