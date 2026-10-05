@@ -37,10 +37,8 @@ def engine():
 
 @pytest.fixture(autouse=True)
 def clean_db(engine):
-    """Перед каждым тестом очищаем таблицы -> тесты независимы."""
     with engine.begin() as conn:
         conn.execute(text("TRUNCATE users, projects, tasks RESTART IDENTITY CASCADE"))
-
 
 @pytest.fixture
 def client(engine):
