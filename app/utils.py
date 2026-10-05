@@ -15,9 +15,6 @@ def get_or_404(db: Session, model: type[T], obj_id: int, label: str) -> T:
 
 
 def commit_or_http_error(db: Session, status_code: int, detail: str) -> None:
-    """commit(); при нарушении ограничения БД откатывает транзакцию и
-    превращает ошибку в HTTP-ответ. Защищает от гонок (проверка прошла,
-    а запись успели изменить/удалить до commit)."""
     try:
         db.commit()
     except IntegrityError:
