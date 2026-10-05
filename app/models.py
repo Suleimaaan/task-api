@@ -44,8 +44,7 @@ class Project(Base):
         DateTime(timezone=True), server_default=func.now()
     )
 
-    # passive_deletes=True: ORM не загружает задачи перед удалением проекта,
-    # а полагается на ON DELETE CASCADE в самой БД.
+    # passive_deletes=True: ORM не загружает задачи перед удалением проекта, а полагается на ON DELETE CASCADE в самой БД.
     tasks: Mapped[list["Task"]] = relationship(
         cascade="all, delete-orphan", passive_deletes=True
     )
@@ -74,7 +73,6 @@ class Task(Base):
     project_id: Mapped[int] = mapped_column(
         ForeignKey("projects.id", ondelete="CASCADE")
     )
-    # Необязательный исполнитель; при удалении пользователя поле обнуляется.
     assignee_id: Mapped[int | None] = mapped_column(
         ForeignKey("users.id", ondelete="SET NULL"), index=True
     )
