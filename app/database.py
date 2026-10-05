@@ -13,7 +13,6 @@ class Base(DeclarativeBase):
 
 @lru_cache
 def get_engine():
-    # Engine создаётся лениво: при импорте приложения подключения не происходит.
     return create_engine(settings.database_url, pool_pre_ping=True)
 
 
